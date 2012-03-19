@@ -2,18 +2,18 @@
 Flask Sample Project
 =====================
 
-By @audreyr.
+By @pydanny as forked from a project by @audreyr.
 
-This is a sample Flask project that uses the Consumer Notebook API.
+This is a Flask project that uses the Consumer Notebook API.
 
 Running it locally
 ------------------
 
 In your terminal::
 
-    $ git clone https://github.com/consumernotebook/cn-flask-sample.git
-    $ cd cn-flask-sample
-    $ mkvirtualenv cn-flask-sample
+    $ git clone https://github.com/pydanny/bookmanager.git
+    $ cd bookmanager
+    $ mkvirtualenv bookmanager
     $ pip install -r requirements.txt
 
 To run it in debug mode locally::
