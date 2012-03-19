@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="container">
+    <div class="row">
+        <div class="span9">
+
+            {% if access_token %}
+            <div class="authenticate hidden">
+              <a class="connect" href="">Reconnect</a>
+            </div>
+            {% else %}
+                <div class="authenticate hidden">
+                  <a class="connect" href="">Connect</a>
+                </div>            
+            {% endif %}
+                
+            {% if access_token %}
+            
+                <div class="authenticated">
+                  <p>
+                    You are using token
+                    <strong>{{ access_token }}</strong>.
+                  </p>
+
+                  <p>
+                    Your Consumer Notebook username is
+                    <span class="user">[no username]</span>.
+                  </p>
+              </div>
+            
+            
+            {% endif %}
+            
+        
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" charset="utf-8" src="js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+  // This is adapted from the SoundCloud example at https://gist.github.com/563893
+  $(function () {
+    var extractToken = function(hash) {
+      var match = hash.match(/access_token=(\w+)/);
+      return !!match && match[1];
+    };
+
+    var setting =
+      {
+        'host':     "127.0.0.1:8000",
+        'clientId': "{{ settings.clientId }}",
+        'redirectURI': "{{ settings.redirectURI }}"
+      };
+
+    var authHost     = "http://"     + setting.host;
+    var resourceHost = "http://" + setting.host;
+
+    var endUserAuthorizationEndpoint = authHost + "/oauth2/authorize";
+
+    var token = extractToken(document.location.hash);
+    if (token) {
+      $('div.authenticated').show();
+
+      $('span.token').text(token);
+
+      $.ajax({
+          url: resourceHost + '/api/v1/myinfo'
+        , beforeSend: function (xhr) {
+            xhr.setRequestHeader('Authorization', "OAuth " + token);
+            xhr.setRequestHeader('Accept',        "application/json");
+          }
+        , success: function (response) {
+            var container = $('span.user');
+            if (response) {
+              container.text(response.username);
+            } else {
+              container.text("An error occurred.");
+            }
+          }
+      });
+    } else {
+      $('div.authenticate').show();
+
+      var authUrl = endUserAuthorizationEndpoint + 
+        "?response_type=token" +
+        "&client_id="    + setting.clientId +
+        "&redirect_uri=" + setting.redirectURI;
+
+      $("a.connect").attr("href", authUrl);
+    }
+  });
+</script>
+
+{% endblock %}
+
+{% block css %}
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+{% endblock %}
