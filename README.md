@@ -6,6 +6,13 @@ By @pydanny as forked from a project by @audreyr.
 
 This is a Flask project that uses the Consumer Notebook API.
 
+Plans
+-------
+
+* Inventory all your books
+* Create a wishlist of books
+* Get notified when someone else buys you a book
+
 Running it locally
 ------------------
 
